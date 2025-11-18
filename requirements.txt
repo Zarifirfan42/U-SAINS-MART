@@ -1,0 +1,26 @@
+﻿USM Marketplace (Front-End Only)
+===============================
+
+Technologies: HTML, CSS, JavaScript (no backend, no frameworks, no npm/Python/Node.js).
+Requirements: only a modern browser; optionally edit with VS Code or Cursor.
+
+How to run:
+1. Keep all files inside the same project folder structure.
+2. Open `index.html` in your browser (double-click or drag into the window).
+
+Recommended repository name: `usm-marketplace`.
+
+Folder overview:
+- `index.html` + other *.html pages (login, register, products, add/edit product, cart, checkout, profile, admin, chat, inbox, requirements).
+- `styles.css` (global styles).
+- `js/` (auth.js, products.js, cart.js, messages.js, storage.js, page-handlers.js, main.js, mock-data.js, ui.js).
+- `assets/` (placeholder images, etc.).
+
+Cloning workflow:
+1. `git clone https://github.com/<you>/usm-marketplace.git`
+2. `cd usm-marketplace`
+3. Open the folder in VS Code/Cursor (optional) and launch `index.html` in your browser.
+
+Notes:
+- `js/mock-data.js` seeds dummy users, products, and messages via localStorage.
+- All navigation links expect the same relative folder layout; do not rearrange files.

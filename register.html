@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Register - USM Marketplace</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="register" class="layout">
+  <header id="app-header"></header>
+  <main>
+    <section class="card card-medium">
+      <h1>Create Account</h1>
+      <form id="register-form">
+        <div class="input-group">
+          <label for="register-email">Email</label>
+          <input id="register-email" type="email" name="email" required />
+        </div>
+        <div class="input-group">
+          <label for="register-username">Username</label>
+          <input id="register-username" type="text" name="username" required />
+        </div>
+        <div class="input-group">
+          <label for="register-password">Password</label>
+          <input id="register-password" type="password" name="password" minlength="6" required />
+        </div>
+        <div class="input-group">
+          <label for="register-role">Role</label>
+          <select id="register-role" name="role">
+            <option value="student">Student (Buyer & Seller)</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Register</button>
+        <p>Already have an account? <a href="login.html">Login here</a></p>
+      </form>
+    </section>
+  </main>
+  <div id="app-footer"></div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

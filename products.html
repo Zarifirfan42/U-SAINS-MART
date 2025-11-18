@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Marketplace - USM</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="products" class="layout">
+  <header id="app-header"></header>
+  <main>
+    <h1>Discover Listings</h1>
+    <div class="filters">
+      <input class="filter" id="search-input" placeholder="Search products" aria-label="Search products" />
+      <select class="filter" id="category-filter" aria-label="Filter by category"></select>
+      <select class="filter" id="price-filter" aria-label="Filter by price">
+        <option value="all">Any price</option>
+        <option value="0-200">RM 0 - RM 200</option>
+        <option value="200-1000">RM 200 - RM 1000</option>
+        <option value="1000">RM 1000+</option>
+      </select>
+      <select class="filter" id="sort-select" aria-label="Sort products">
+        <option value="latest">Latest</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+      </select>
+    </div>
+    <div class="card-grid" id="products-container"></div>
+  </main>
+  <div id="app-footer"></div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

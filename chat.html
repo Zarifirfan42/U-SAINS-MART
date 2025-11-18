@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chat - USM Marketplace</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="chat" class="layout">
+  <header id="app-header"></header>
+  <main>
+    <h1>Chat</h1>
+    <div class="chat-box">
+      <div class="messages" id="chat-messages"></div>
+      <form id="chat-form" class="flex">
+        <input name="message" placeholder="Type your message" class="flex-1" aria-label="Message" />
+        <button class="btn btn-primary" type="submit">Send</button>
+      </form>
+    </div>
+  </main>
+  <div id="app-footer"></div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

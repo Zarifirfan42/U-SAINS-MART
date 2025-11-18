@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Add Product - USM Marketplace</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="addProduct" class="layout">
+  <header id="app-header"></header>
+  <main>
+    <h1>List a new item</h1>
+    <div class="card">
+      <form id="add-product-form">
+        <div class="flex form-row align-center">
+          <img id="image-preview" class="media-preview" src="assets/placeholder.svg" alt="Preview" />
+          <div class="input-group flex-grow">
+            <label for="product-image">Upload image</label>
+            <input type="file" id="product-image" accept="image/*" />
+          </div>
+        </div>
+        <div class="flex form-row">
+          <div class="input-group flex-grow">
+            <label for="product-name">Product name</label>
+            <input id="product-name" name="name" required />
+          </div>
+          <div class="input-group flex-grow">
+            <label for="product-price">Price (RM)</label>
+            <input id="product-price" type="number" name="price" min="0" required />
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="product-description">Description</label>
+          <textarea id="product-description" name="description" required></textarea>
+        </div>
+        <div class="input-group">
+          <label for="product-category">Category</label>
+          <select id="product-category" name="category" required>
+            <option>Electronics</option>
+            <option>Books</option>
+            <option>Appliances</option>
+            <option>Furniture</option>
+            <option>Accessories</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Publish listing</button>
+      </form>
+    </div>
+  </main>
+  <div id="app-footer"></div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+﻿import { getCurrentUser, logout } from "./auth.js";
+
+export function renderShell() {
+  renderHeader();
+  renderFooter();
+}
+
+function renderHeader() {
+  const header = document.getElementById("app-header");
+  if (!header) return;
+  const user = getCurrentUser();
+  header.innerHTML = `
+    <div class="top-bar">
+      <a class="brand" href="index.html">
+        <span>USM</span>
+        USM Marketplace
+      </a>
+      <nav class="nav-links">
+        <a href="products.html">Marketplace</a>
+        <a href="add-product.html">Sell Item</a>
+        <a href="my-products.html">My Listings</a>
+        <a href="cart.html">Cart</a>
+        <a href="chat.html">Chat</a>
+        <a href="inbox.html">Inbox</a>
+        <a href="admin-dashboard.html">Admin</a>
+      </nav>
+      <div class="auth-actions">
+        ${user ? headerUser(user) : guestActions()}
+      </div>
+    </div>`;
+
+  const logoutBtn = header.querySelector("#logout-btn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      logout();
+      window.location.href = "login.html";
+    });
+  }
+}
+
+function headerUser(user) {
+  return `
+    <a class="btn btn-muted" href="profile.html">${user.username}</a>
+    <button class="btn btn-outline" id="logout-btn">Logout</button>
+  `;
+}
+
+function guestActions() {
+  return `
+    <a class="btn btn-outline" href="login.html">Login</a>
+    <a class="btn btn-primary" href="register.html">Register</a>
+  `;
+}
+
+function renderFooter() {
+  const footer = document.getElementById("app-footer");
+  if (!footer) return;
+  const year = new Date().getFullYear();
+  footer.innerHTML = `
+    <footer>
+      <p>&copy; ${year} USM Marketplace &mdash; Built for Universiti Sains Malaysia students.</p>
+      <p><a href="requirements.html">Project Requirements</a> &middot; <a href="https://github.com/" target="_blank">GitHub</a></p>
+    </footer>`;
+}
+
+export function showToast(message, type = "info") {
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.style.borderLeft = `6px solid ${type === "error" ? "#dc2626" : type === "success" ? "#0f9d58" : "#4c1d95"}`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3200);
+}
+
+export function renderProductCard(product, actions = []) {
+  const chip = product.status === "reported" ? `<span class="status-badge status-reported">Reported</span>` : "";
+  return `
+    <article class="card product-card">
+      <img src="${product.image}" alt="${product.name}" />
+      <div class="flex-between">
+        <h3>${product.name}</h3>
+        ${chip}
+      </div>
+      <p class="price">RM ${product.price.toFixed(2)}</p>
+      <span class="chip">${product.category}</span>
+      <p>${product.description.slice(0, 80)}...</p>
+      <div class="flex" style="flex-wrap:wrap;">
+        <a class="btn btn-outline" href="product-details.html?id=${product.id}">View</a>
+        ${actions.join(" ")}
+      </div>
+    </article>`;
+}

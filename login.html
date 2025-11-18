@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - USM Marketplace</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="login" class="layout">
+  <header id="app-header"></header>
+  <main>
+    <section class="card card-compact">
+      <h1>Welcome back</h1>
+      <form id="login-form">
+        <div class="input-group">
+          <label for="login-email">Email</label>
+          <input id="login-email" type="email" name="email" required />
+        </div>
+        <div class="input-group">
+          <label for="login-password">Password</label>
+          <input id="login-password" type="password" name="password" required />
+        </div>
+        <button class="btn btn-primary" type="submit">Login</button>
+        <p>New here? <a href="register.html">Create an account</a></p>
+      </form>
+    </section>
+  </main>
+  <div id="app-footer"></div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

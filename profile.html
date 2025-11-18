@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profile - USM Marketplace</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="profile" class="layout">
+  <header id="app-header"></header>
+  <main>
+    <h1>My Profile</h1>
+    <div class="card card-wide">
+      <form id="profile-form">
+        <div class="input-group">
+          <label for="profile-username">Username</label>
+          <input id="profile-username" name="username" required />
+        </div>
+        <div class="input-group">
+          <label for="profile-email">Email</label>
+          <input id="profile-email" name="email" type="email" required />
+        </div>
+        <div class="input-group">
+          <label for="profile-campus">Campus / School</label>
+          <input id="profile-campus" name="campus" />
+        </div>
+        <div class="input-group">
+          <label for="profile-bio">Bio</label>
+          <textarea id="profile-bio" name="bio"></textarea>
+        </div>
+        <button class="btn btn-primary" type="submit">Save changes</button>
+      </form>
+    </div>
+  </main>
+  <div id="app-footer"></div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
