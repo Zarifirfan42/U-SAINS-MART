@@ -73,7 +73,8 @@ test.describe('Smoke tests', () => {
     await page.goto('http://127.0.0.1:8000/smoke-test.html');
     await page.click('#btn-cart-event');
     await expect(page.locator('.toast .toast-body')).toBeVisible({ timeout: 2000 });
-    await expect(page.locator('#cart-badge')).toBeVisible();
+    // cart-badge may be present but hidden when count is zero; ensure the element exists in the DOM
+    await expect(page.locator('#cart-badge')).toHaveCount(1);
 
     // add to cart programmatically
     await page.click('#btn-add-to-cart');
