@@ -1,0 +1,11 @@
+{
+  "name": "u-sains-mart",
+  "version": "0.0.0",
+  "scripts": {
+    "smoke": "npx playwright test smoke-test/playwright.spec.mjs",
+    "smoke:legacy": "node smoke-test/playwright-test.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.36.0"
+  }
+}
