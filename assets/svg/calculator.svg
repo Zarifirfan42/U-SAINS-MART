@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 260">
+  <rect width="100%" height="100%" rx="12" fill="#f8fafc"/>
+  <rect x="30" y="30" width="120" height="40" rx="4" fill="#e2e8f0"/>
+  <rect x="30" y="80" width="120" height="140" rx="6" fill="#fff" stroke="#94a3b8"/>
+  <text x="90" y="55" font-family="Arial" font-size="14" fill="#0f1724" text-anchor="middle">Casio FX-991EX</text>
+</svg>

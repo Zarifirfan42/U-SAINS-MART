@@ -1,6 +1,6 @@
 ﻿import { getCurrentUser } from "./auth.js";
 import { storage } from "./storage.js";
-import { getProductById } from "./products.js";
+import { getProductById, updateProduct } from "./products.js";
 
 function cartKey(userId) {
   return `usm_cart_${userId}`;
@@ -61,7 +61,12 @@ export function getCartWithDetails() {
 export function checkout(paymentMethod) {
   const user = getCurrentUser();
   if (!user) throw new Error("Please login");
-  const message = `Payment via ${paymentMethod} initiated for ${getCartWithDetails().length} item(s).`;
+  const detailedItems = getCartWithDetails();
+  if (!detailedItems.length) throw new Error("Your cart is empty");
+  detailedItems.forEach((entry) => {
+    updateProduct(entry.productId, { status: "sold" }, { force: true });
+  });
+  const message = `Payment via ${paymentMethod} initiated for ${detailedItems.length} item(s).`;
   clearCart();
   return message;
 }

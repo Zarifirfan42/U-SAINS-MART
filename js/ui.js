@@ -9,6 +9,8 @@ function renderHeader() {
   const header = document.getElementById("app-header");
   if (!header) return;
   const user = getCurrentUser();
+  const currentPath = window.location.pathname.split("/").pop() || "index.html";
+  const isActive = (href) => currentPath === href ? "active" : "";
   header.innerHTML = `
     <div class="top-bar">
       <a class="brand" href="index.html">
@@ -16,13 +18,13 @@ function renderHeader() {
         USM Marketplace
       </a>
       <nav class="nav-links">
-        <a href="products.html">Marketplace</a>
-        <a href="add-product.html">Sell Item</a>
-        <a href="my-products.html">My Listings</a>
-        <a href="cart.html">Cart</a>
-        <a href="chat.html">Chat</a>
-        <a href="inbox.html">Inbox</a>
-        <a href="admin-dashboard.html">Admin</a>
+        <a href="products.html" class="${isActive("products.html")}">Marketplace</a>
+        <a href="add-product.html" class="${isActive("add-product.html")}">Sell Item</a>
+        <a href="my-products.html" class="${isActive("my-products.html")}">My Listings</a>
+        <a href="cart.html" class="${isActive("cart.html")}">Cart</a>
+        <a href="chat.html" class="${isActive("chat.html")}">Chat</a>
+        <a href="inbox.html" class="${isActive("inbox.html")}">Inbox</a>
+        <a href="admin-dashboard.html" class="${isActive("admin-dashboard.html")}">Admin</a>
       </nav>
       <div class="auth-actions">
         ${user ? headerUser(user) : guestActions()}

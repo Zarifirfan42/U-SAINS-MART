@@ -7,6 +7,7 @@
 import { getCurrentUser, login, register, updateProfile } from "./auth.js";
 import {
   deleteProduct,
+  getAvailableProducts,
   getCategories,
   getMyProducts,
   getProductById,
@@ -39,10 +40,19 @@ const pageHandlers = {
 
 export default pageHandlers;
 
+function requireAuth() {
+  const user = getCurrentUser();
+  if (!user) {
+    showToast("Please login first", "error");
+    window.location.href = "login.html";
+    throw new Error("Redirecting");
+  }
+}
+
 function renderHome() {
   const latestGrid = document.getElementById("latest-products");
   if (latestGrid) {
-    const products = getProducts()
+    const products = getAvailableProducts()
       .sort((a, b) => b.createdAt - a.createdAt)
       .slice(0, 4);
     latestGrid.innerHTML = products
@@ -99,7 +109,7 @@ function initProducts() {
     const priceRange = priceSelect.value;
     const sort = sortSelect.value;
 
-    let items = [...getProducts()];
+    let items = [...getAvailableProducts()];
     if (searchTerm) {
       items = items.filter(
         (p) =>
@@ -141,6 +151,7 @@ function populateCategories(select) {
 }
 
 function initAddProduct() {
+  requireAuth();
   const form = document.getElementById("add-product-form");
   const preview = document.getElementById("image-preview");
   const fileInput = document.getElementById("product-image");
@@ -150,7 +161,9 @@ function initAddProduct() {
     fileInput.addEventListener("change", async (e) => {
       const file = e.target.files[0];
       if (file) {
-        uploadedImage = await toBase64(file);
+        const encoded = await toBase64(file);
+        if (!encoded) return;
+        uploadedImage = encoded;
         if (preview) preview.src = uploadedImage;
       }
     });
@@ -162,8 +175,9 @@ function initAddProduct() {
     try {
       saveProduct({ ...data, image: uploadedImage || "assets/placeholder.svg" });
       showToast("Product listed!", "success");
-      form.reset();
-      if (preview) preview.src = "assets/placeholder.svg";
+      setTimeout(() => {
+        window.location.href = "my-products.html";
+      }, 500);
     } catch (err) {
       showToast(err.message, "error");
     }
@@ -175,12 +189,23 @@ function initEditProduct() {
   if (!form) return;
   const id = new URLSearchParams(window.location.search).get("id");
   const product = getProductById(id);
+  const currentUser = getCurrentUser();
   const preview = document.getElementById("edit-image-preview");
   const fileInput = document.getElementById("edit-product-image");
   let imageValue = product?.image || "assets/placeholder.svg";
 
   if (!product) {
     showToast("Product not found", "error");
+    window.location.href = "my-products.html";
+    return;
+  }
+  if (!currentUser) {
+    showToast("Please login first", "error");
+    window.location.href = "login.html";
+    return;
+  }
+  if (product.ownerId !== currentUser.id && currentUser.role !== "admin") {
+    showToast("You do not have permission to edit this item", "error");
     window.location.href = "my-products.html";
     return;
   }
@@ -194,7 +219,9 @@ function initEditProduct() {
   fileInput?.addEventListener("change", async (e) => {
     const file = e.target.files[0];
     if (file) {
-      imageValue = await toBase64(file);
+      const encoded = await toBase64(file);
+      if (!encoded) return;
+      imageValue = encoded;
       if (preview) preview.src = imageValue;
     }
   });
@@ -202,13 +229,14 @@ function initEditProduct() {
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     const data = Object.fromEntries(new FormData(form));
-    updateProduct(product.id, { ...data, price: Number(data.price), image: imageValue });
+    updateProduct(product.id, { ...data, image: imageValue });
     showToast("Product updated", "success");
     window.location.href = "my-products.html";
   });
 }
 
 function initMyProducts() {
+  requireAuth();
   const container = document.getElementById("my-products");
   if (!container) return;
   const items = getMyProducts();
@@ -248,8 +276,10 @@ function initProductDetails() {
         <p>${product.description}</p>
         <p><strong>Category:</strong> ${product.category}</p>
         <div class="flex" style="flex-wrap:wrap;">
+        ${product.status === "sold" ? `<p class="chip" style="background:#fee2e2;color:#b91c1c;">This item has been sold</p>` : `
         <button type="button" class="btn btn-primary" id="contact-seller">Contact Seller</button>
         <button type="button" class="btn btn-outline" id="add-to-cart">Add to Cart</button>
+        `}
         <button type="button" class="btn btn-muted" id="report-product">Report Listing</button>
         ${owner?.role === "admin" ? `<button type="button" class="btn btn-muted" id="force-delete">Force Delete</button>` : ""}
         </div>
@@ -257,7 +287,7 @@ function initProductDetails() {
     </div>`;
 
   document.getElementById("contact-seller")?.addEventListener("click", () => {
-    window.location.href = `chat.html?productId=${product.id}`;
+    window.location.href = `chat.html?to=${product.ownerId}`;
   });
   document.getElementById("add-to-cart")?.addEventListener("click", () => {
     try {
@@ -281,6 +311,7 @@ function initProductDetails() {
 }
 
 function initCart() {
+  requireAuth();
   const container = document.getElementById("cart-items");
   const totalEl = document.getElementById("cart-total");
   if (!container) return;
@@ -328,7 +359,9 @@ function initCheckout() {
       if (rating) {
         showToast(`Thanks for rating us ${rating}⭐`, "info");
       }
-      form.reset();
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1000);
     } catch (err) {
       showToast(err.message, "error");
     }
@@ -336,6 +369,7 @@ function initCheckout() {
 }
 
 function initProfile() {
+  requireAuth();
   const form = document.getElementById("profile-form");
   const user = getCurrentUser();
   if (!form || !user) return;
@@ -393,6 +427,9 @@ function initChat() {
       showToast(err.message, "error");
     }
   });
+  setInterval(() => {
+    renderMessages(getInbox(), list);
+  }, 3000);
 }
 
 function initInbox() {
@@ -426,6 +463,11 @@ function renderMessages(messages, list) {
 }
 
 async function toBase64(file) {
+  const MAX_SIZE = 350 * 1024; // ~350 KB
+  if (file.size > MAX_SIZE) {
+    showToast("Please use images smaller than 350KB", "error");
+    return null;
+  }
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result);
