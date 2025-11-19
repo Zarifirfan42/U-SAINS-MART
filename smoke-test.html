@@ -28,8 +28,11 @@
     import { renderShell, showToast, showLoading, hideLoading, renderProductCard, updateCartBadge } from './js/ui.js';
     import { mockProducts } from './js/mock-data.js';
     import { addToCart, removeFromCart } from './js/cart.js';
+    import { seedMockData, storage } from './js/storage.js';
 
     // render header/footer
+    // seed mock data and set a test session so cart operations work in smoke tests
+    try { seedMockData(); storage.saveSession('u-student-1'); } catch (e) { /* ignore */ }
     renderShell();
 
     // render one product card
@@ -57,7 +60,7 @@
 
     document.getElementById('btn-add-to-cart').addEventListener('click', () => {
       if (mockProducts && mockProducts.length) {
-        addToCart(mockProducts[0].id, 1);
+        addToCart(mockProducts[0].id);
         showToast('Added product to cart (programmatic)', 'success');
         // allow UI to update
         setTimeout(() => updateCartBadge(), 200);
