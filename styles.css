@@ -1,13 +1,14 @@
-﻿:root {
-  --primary: #4c1d95;
-  --primary-dark: #3b1575;
-  --secondary: #f3e8ff;
-  --accent: #a855f7;
-  --text: #1f1f1f;
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --secondary: #dbeafe;
+  --accent: #3b82f6;
+  --text: #1f2937;
   --muted: #6b7280;
-  --success: #0f9d58;
-  --danger: #dc2626;
-  --bg: #f9f6ff;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --bg: #f8fafc;
 }
 
 * {
@@ -47,7 +48,7 @@ main {
 #app-header,
 #app-footer {
   background: #fff;
-  box-shadow: 0 2px 8px rgba(76, 29, 149, 0.08);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
 }
 
 .top-bar {
@@ -83,16 +84,41 @@ main {
   flex-wrap: wrap;
 }
 
+.nav-item-wrapper {
+  position: relative;
+}
+
 .nav-links a {
   padding: 0.5rem 0.9rem;
   border-radius: 999px;
   color: var(--primary);
   font-weight: 500;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
-.nav-links a.active,
+.nav-links a.active {
+  background: var(--primary);
+  color: #fff;
+}
+
 .nav-links a:hover {
   background: var(--secondary);
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--danger);
+  color: #fff;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
 .auth-actions button,
@@ -103,19 +129,28 @@ button {
   padding: 0.65rem 1.25rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .btn-primary {
   background: var(--primary);
   color: #fff;
-  box-shadow: 0 10px 15px -10px rgba(76, 29, 149, 0.8);
+  box-shadow: 0 10px 15px -10px rgba(37, 99, 235, 0.8);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
 }
 
 .btn-outline {
   background: transparent;
   border: 1px solid var(--primary);
   color: var(--primary);
+  transition: all 0.15s ease;
+}
+
+.btn-outline:hover {
+  background: var(--secondary);
 }
 
 .btn-muted {
@@ -129,13 +164,18 @@ button:hover,
   transform: translateY(-2px);
 }
 
+button:active,
+.btn:active {
+  transform: scale(0.98);
+}
+
 .hero {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 2rem;
   align-items: center;
   padding: 2rem;
-  background: linear-gradient(120deg, #4c1d9518, #f3e8ff);
+  background: linear-gradient(120deg, #2563eb12, #dbeafe);
   border-radius: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -164,6 +204,21 @@ button:hover,
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 60px -20px rgba(15, 23, 42, 0.35);
+}
+
+.product-card {
+  cursor: pointer;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 60px -20px rgba(15, 23, 42, 0.35);
 }
 
 .product-card img {
@@ -171,6 +226,11 @@ button:hover,
   height: 180px;
   object-fit: cover;
   background: var(--secondary);
+  transition: transform 0.2s ease;
+}
+
+.product-card:hover img {
+  transform: scale(1.05);
 }
 
 .product-card h3 {
@@ -237,7 +297,7 @@ th,
 td {
   text-align: left;
   padding: 0.75rem;
-  border-bottom: 1px solid #f3e8ff;
+  border-bottom: 1px solid #dbeafe;
 }
 
 .status-badge {
@@ -277,8 +337,32 @@ td {
   padding: 1rem 1.5rem;
   border-radius: 1rem;
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2);
-  animation: fadeIn 0.2s ease;
+  animation: slideInRight 0.3s ease;
   z-index: 1000;
+  border-left: 4px solid var(--primary);
+}
+
+.toast.success {
+  border-left-color: var(--success);
+}
+
+.toast.error {
+  border-left-color: var(--danger);
+}
+
+.toast.warning {
+  border-left-color: var(--warning);
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes fadeIn {

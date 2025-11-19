@@ -1,8 +1,10 @@
-﻿import { getCurrentUser, logout } from "./auth.js";
+import { getCurrentUser, logout } from "./auth.js";
+import { getCart } from "./cart.js";
 
 export function renderShell() {
   renderHeader();
   renderFooter();
+  setActiveNavLink();
 }
 
 function renderHeader() {
@@ -14,7 +16,7 @@ function renderHeader() {
   header.innerHTML = `
     <div class="top-bar">
       <a class="brand" href="index.html">
-        <span>USM</span>
+        <span>U</span>
         USM Marketplace
       </a>
       <nav class="nav-links">
@@ -65,12 +67,34 @@ function renderFooter() {
     </footer>`;
 }
 
+function setActiveNavLink() {
+  const currentPage = window.location.pathname.split("/").pop() || "index.html";
+  const navLinks = document.querySelectorAll(".nav-links a");
+
+  navLinks.forEach(link => {
+    const href = link.getAttribute("href");
+    if (href === currentPage || (currentPage === "" && href === "index.html")) {
+      link.classList.add("active");
+    } else {
+      link.classList.remove("active");
+    }
+  });
+}
+
 export function showToast(message, type = "info") {
   const toast = document.createElement("div");
-  toast.className = "toast";
-  toast.style.borderLeft = `6px solid ${type === "error" ? "#dc2626" : type === "success" ? "#0f9d58" : "#4c1d95"}`;
-  toast.textContent = message;
+  toast.className = `toast ${type}`;
+
+  const icons = {
+    success: "✓",
+    error: "✕",
+    warning: "⚠",
+    info: "ℹ"
+  };
+
+  toast.innerHTML = `<span style="margin-right: 0.5rem; font-weight: 700;">${icons[type] || "ℹ"}</span> ${message}`;
   document.body.appendChild(toast);
+
   setTimeout(() => toast.remove(), 3200);
 }
 

@@ -1,8 +1,13 @@
-﻿import { storage, uid } from "./storage.js";
+import { storage, uid } from "./storage.js";
 import { getCurrentUser } from "./auth.js";
 
 export function getProducts() {
-  return storage.getProducts();
+  try {
+    return storage.getProducts();
+  } catch (err) {
+    console.error("Failed to get products", err);
+    return [];
+  }
 }
 
 export function getAvailableProducts() {
@@ -10,7 +15,12 @@ export function getAvailableProducts() {
 }
 
 export function getProductById(id) {
-  return getProducts().find((p) => p.id === id) || null;
+  try {
+    return getProducts().find((p) => p.id === id) || null;
+  } catch (err) {
+    console.error("Failed to get product", err);
+    return null;
+  }
 }
 
 export function saveProduct(input) {
@@ -57,23 +67,37 @@ export function updateProduct(id, updates, { force = false } = {}) {
 }
 
 export function deleteProduct(id) {
-  const products = getProducts().filter((p) => p.id !== id);
-  storage.saveProducts(products);
+  try {
+    const products = getProducts().filter((p) => p.id !== id);
+    storage.saveProducts(products);
+  } catch (err) {
+    throw err;
+  }
 }
 
 export function getMyProducts() {
-  const user = getCurrentUser();
-  if (!user) return [];
-  return getProducts().filter((p) => p.ownerId === user.id);
+  try {
+    const user = getCurrentUser();
+    if (!user) return [];
+    return getProducts().filter((p) => p.ownerId === user.id);
+  } catch (err) {
+    console.error("Failed to get my products", err);
+    return [];
+  }
 }
 
 export function reportProduct(id, reason) {
-  const products = getProducts().map((p) => {
-    if (p.id !== id) return p;
-    const reports = [...(p.reports || []), { reason, date: Date.now() }];
-    return { ...p, reports, status: reports.length >= 3 ? "reported" : p.status };
-  });
-  storage.saveProducts(products);
+  try {
+    if (!reason) throw new Error("Report reason required");
+    const products = getProducts().map((p) => {
+      if (p.id !== id) return p;
+      const reports = [...(p.reports || []), { reason, date: Date.now() }];
+      return { ...p, reports, status: reports.length >= 3 ? "reported" : p.status };
+    });
+    storage.saveProducts(products);
+  } catch (err) {
+    throw err;
+  }
 }
 
 export function getCategories() {
