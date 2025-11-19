@@ -3,9 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "smoke": "npx playwright test smoke-test/playwright.spec.mjs",
-    "smoke:legacy": "node smoke-test/playwright-test.mjs"
+    "smoke:legacy": "node smoke-test/playwright-test.mjs",
+    "smoke:soft": "node smoke-test/run-smoke.js --soft",
+    "generate-favicon": "node scripts/generate-favicon.js"
   },
   "devDependencies": {
-    "@playwright/test": "^1.36.0"
+    "@playwright/test": "^1.36.0",
+    "jimp": "^0.16.1",
+    "png-to-ico": "^1.0.0"
   }
 }
