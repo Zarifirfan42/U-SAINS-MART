@@ -529,6 +529,11 @@ footer {
   }
 }
 
+/* smoke-test helpers */
+body.smoke-test { padding: 1.5rem; background: #f3f4f6; }
+.smoke-controls { margin-top: 1rem; display:flex; gap:0.5rem; }
+
+
 /* Enhanced UI styles: badges, toasts, loader, responsive product images */
 
 #cart-badge,

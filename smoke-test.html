@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>USM Marketplace — Smoke Test</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app-header"></div>
+  <main>
+    <h2>Smoke Test: UI elements</h2>
+    <div id="test-area"></div>
+    <div class="smoke-controls">
+      <button id="btn-toast">Show Toast</button>
+      <button id="btn-loader">Show Loader</button>
+      <button id="btn-cart-event">Trigger cart:updated</button>
+    </div>
+  </main>
+  <div id="app-footer"></div>
+
+  <script type="module">
+    import { renderShell, showToast, showLoading, hideLoading, renderProductCard, updateCartBadge } from './js/ui.js';
+    import { mockProducts } from './js/mock-data.js';
+    import { addToCart } from './js/cart.js';
+
+    // render header/footer
+    renderShell();
+
+    // render one product card
+    const area = document.getElementById('test-area');
+    if (mockProducts && mockProducts.length) {
+      const html = renderProductCard(mockProducts[0]);
+      area.innerHTML = html;
+    }
+
+    document.getElementById('btn-toast').addEventListener('click', () => {
+      showToast('This is a success toast — smoke test', 'success');
+    });
+
+    document.getElementById('btn-loader').addEventListener('click', () => {
+      showLoading();
+      setTimeout(() => hideLoading(), 1400);
+    });
+
+    document.getElementById('btn-cart-event').addEventListener('click', () => {
+      // dispatch cart event to update badge
+      window.dispatchEvent(new CustomEvent('cart:updated', { detail: { userId: 'u-student-1' } }));
+      // also show a toast
+      showToast('cart:updated event dispatched', 'info');
+    });
+
+    // small initial toast
+    setTimeout(() => showToast('Smoke test loaded — ready', 'info'), 300);
+  </script>
+</body>
+</html>
