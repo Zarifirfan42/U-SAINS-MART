@@ -23,13 +23,20 @@ test.beforeAll(async () => {
     // server already running
     return;
   } catch (e) {
-    // spawn http-server using npx so it works even if not globally installed
-    serverProc = spawn(process.execPath, ['-e', `require('child_process').spawn('npx',['http-server','-p','8000'],{stdio:'ignore',detached:true}).unref()`], {
-      stdio: 'ignore',
-      detached: true
-    });
-    // wait for server to be ready
-    await waitForServer('http://127.0.0.1:8000/');
+    // spawn http-server using npx directly which works better on Windows
+    try {
+      serverProc = spawn('npx', ['http-server', '-p', '8000'], {
+        stdio: 'ignore',
+        detached: true,
+        shell: true
+      });
+      if (serverProc && serverProc.unref) serverProc.unref();
+    } catch (spawnErr) {
+      console.warn('Failed to spawn http-server via npx:', spawnErr);
+    }
+
+    // increase wait attempts in case npx downloads the binary
+    await waitForServer('http://127.0.0.1:8000/', 30, 500);
   }
 });
 
