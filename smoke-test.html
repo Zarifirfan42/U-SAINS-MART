@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>USM Marketplace — Smoke Test</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 </head>
 <body>
   <div id="app-header"></div>
@@ -15,6 +16,10 @@
       <button id="btn-toast">Show Toast</button>
       <button id="btn-loader">Show Loader</button>
       <button id="btn-cart-event">Trigger cart:updated</button>
+      <button id="btn-add-to-cart">Add To Cart (product)</button>
+      <button id="btn-remove-from-cart">Remove From Cart</button>
+      <button id="btn-open-details">Open Product Details</button>
+      <button id="btn-nav-products">Go To Products Page</button>
     </div>
   </main>
   <div id="app-footer"></div>
@@ -22,7 +27,7 @@
   <script type="module">
     import { renderShell, showToast, showLoading, hideLoading, renderProductCard, updateCartBadge } from './js/ui.js';
     import { mockProducts } from './js/mock-data.js';
-    import { addToCart } from './js/cart.js';
+    import { addToCart, removeFromCart } from './js/cart.js';
 
     // render header/footer
     renderShell();
@@ -48,6 +53,34 @@
       window.dispatchEvent(new CustomEvent('cart:updated', { detail: { userId: 'u-student-1' } }));
       // also show a toast
       showToast('cart:updated event dispatched', 'info');
+    });
+
+    document.getElementById('btn-add-to-cart').addEventListener('click', () => {
+      if (mockProducts && mockProducts.length) {
+        addToCart(mockProducts[0].id, 1);
+        showToast('Added product to cart (programmatic)', 'success');
+        // allow UI to update
+        setTimeout(() => updateCartBadge(), 200);
+      }
+    });
+
+    document.getElementById('btn-remove-from-cart').addEventListener('click', () => {
+      if (mockProducts && mockProducts.length) {
+        removeFromCart(mockProducts[0].id);
+        showToast('Removed product from cart (programmatic)', 'warning');
+        setTimeout(() => updateCartBadge(), 200);
+      }
+    });
+
+    document.getElementById('btn-open-details').addEventListener('click', () => {
+      if (mockProducts && mockProducts.length) {
+        const id = encodeURIComponent(mockProducts[0].id);
+        window.location.href = `product-details.html?id=${id}`;
+      }
+    });
+
+    document.getElementById('btn-nav-products').addEventListener('click', () => {
+      window.location.href = 'products.html';
     });
 
     // small initial toast

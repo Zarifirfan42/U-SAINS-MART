@@ -37,6 +37,8 @@ async function waitForServer(url = 'http://127.0.0.1:8000/', attempts = 15, dela
   const context = await browser.newContext();
   const page = await context.newPage();
 
+  let failed = false;
+
   console.log('Opening smoke test page...');
   await page.goto(baseUrl, { waitUntil: 'networkidle', timeout: 10000 });
 
@@ -60,6 +62,7 @@ async function waitForServer(url = 'http://127.0.0.1:8000/', attempts = 15, dela
     console.log('Toast shown, text:', (toastText || '').trim());
   } catch (e) {
     console.error('Toast did not appear as expected');
+    failed = true;
   }
   await page.screenshot({ path: `${out}/toast.png`, fullPage: true });
 
@@ -74,6 +77,7 @@ async function waitForServer(url = 'http://127.0.0.1:8000/', attempts = 15, dela
     console.log('Loader hidden after timeout');
   } catch (e) {
     console.error('Loader did not behave as expected');
+    failed = true;
   }
   await page.screenshot({ path: `${out}/loader.png`, fullPage: true });
   await page.screenshot({ path: `${out}/loader-after.png`, fullPage: true });
@@ -87,6 +91,7 @@ async function waitForServer(url = 'http://127.0.0.1:8000/', attempts = 15, dela
     console.log('Cart badge exists with text:', (badgeText || '').trim());
   } catch (e) {
     console.warn('Cart badge not found in DOM');
+    failed = true;
   }
   try {
     const toastEl2 = await page.waitForSelector('.toast .toast-body', { timeout: 2000 });
@@ -94,8 +99,61 @@ async function waitForServer(url = 'http://127.0.0.1:8000/', attempts = 15, dela
     console.log('Cart-event toast text:', (toastText2 || '').trim());
   } catch (e) {
     console.error('Cart-event toast did not appear');
+    failed = true;
   }
   await page.screenshot({ path: `${out}/cart-event.png`, fullPage: true });
+
+  // Additional smoke checks: add to cart + remove from cart + navigation
+  console.log('Testing add/remove cart and navigation...');
+  try {
+    await page.click('#btn-add-to-cart');
+    await page.waitForTimeout(300);
+    const badgeAfterAdd = await page.$eval('#cart-badge', (el) => el.textContent.trim());
+    console.log('Badge after add:', badgeAfterAdd);
+    if (!badgeAfterAdd || badgeAfterAdd === '0') {
+      throw new Error('Badge did not update after add');
+    }
+  } catch (e) {
+    console.error('Add to cart check failed:', e.message || e);
+    failed = true;
+  }
+
+  try {
+    await page.click('#btn-remove-from-cart');
+    await page.waitForTimeout(300);
+    const badgeAfterRemove = await page.$eval('#cart-badge', (el) => el.textContent.trim());
+    console.log('Badge after remove:', badgeAfterRemove);
+  } catch (e) {
+    console.error('Remove from cart check failed:', e.message || e);
+    failed = true;
+  }
+
+  try {
+    // Open product details (navigation)
+    const [nav] = await Promise.all([
+      page.waitForNavigation({ timeout: 5000 }),
+      page.click('#btn-open-details')
+    ]);
+    console.log('Navigated to product details:', page.url());
+    // go back
+    await page.goBack();
+  } catch (e) {
+    console.error('Navigation to product details failed:', e.message || e);
+    failed = true;
+  }
+
+  try {
+    // navigate to products page
+    const [navProducts] = await Promise.all([
+      page.waitForNavigation({ timeout: 5000 }),
+      page.click('#btn-nav-products')
+    ]);
+    console.log('Navigated to products page:', page.url());
+    await page.goBack();
+  } catch (e) {
+    console.error('Navigation to products failed:', e.message || e);
+    failed = true;
+  }
 
   await browser.close();
   console.log('Smoke test complete. Screenshots saved to', out);
