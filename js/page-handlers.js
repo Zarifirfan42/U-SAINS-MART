@@ -1,4 +1,4 @@
-﻿import {
+import {
   addToCart,
   checkout,
   getCartWithDetails,
@@ -263,6 +263,7 @@ function initProductDetails() {
     try {
       addToCart(product.id);
       showToast("Added to cart", "success");
+      setTimeout(() => location.reload(), 300);
     } catch (err) {
       showToast(err.message, "error");
     }
@@ -310,7 +311,8 @@ function initCart() {
   container.querySelectorAll("[data-remove]").forEach((btn) => {
     btn.addEventListener("click", () => {
       removeFromCart(btn.dataset.remove);
-      initCart();
+      showToast("Item removed", "info");
+      setTimeout(() => location.reload(), 200);
     });
   });
 }

@@ -1,4 +1,4 @@
-﻿import { mockUsers, mockProducts, mockMessages } from "./mock-data.js";
+import { mockUsers, mockProducts, mockMessages } from "./mock-data.js";
 
 const USERS_KEY = "usm_users";
 const PRODUCTS_KEY = "usm_products";
@@ -21,15 +21,73 @@ const read = (key, fallback = []) => {
 };
 
 export const storage = {
-  getUsers: () => read(USERS_KEY, []),
-  saveUsers: (users) => write(USERS_KEY, users),
-  getProducts: () => read(PRODUCTS_KEY, []),
-  saveProducts: (products) => write(PRODUCTS_KEY, products),
-  getMessages: () => read(MESSAGES_KEY, []),
-  saveMessages: (messages) => write(MESSAGES_KEY, messages),
-  getSession: () => read(SESSION_KEY, null),
-  saveSession: (userId) => write(SESSION_KEY, userId),
-  clearSession: () => localStorage.removeItem(SESSION_KEY)
+  getUsers: () => {
+    try {
+      return read(USERS_KEY, []);
+    } catch (err) {
+      console.error("Failed to read users", err);
+      return [];
+    }
+  },
+  saveUsers: (users) => {
+    try {
+      write(USERS_KEY, users);
+    } catch (err) {
+      console.error("Failed to save users", err);
+    }
+  },
+  getProducts: () => {
+    try {
+      return read(PRODUCTS_KEY, []);
+    } catch (err) {
+      console.error("Failed to read products", err);
+      return [];
+    }
+  },
+  saveProducts: (products) => {
+    try {
+      write(PRODUCTS_KEY, products);
+    } catch (err) {
+      console.error("Failed to save products", err);
+    }
+  },
+  getMessages: () => {
+    try {
+      return read(MESSAGES_KEY, []);
+    } catch (err) {
+      console.error("Failed to read messages", err);
+      return [];
+    }
+  },
+  saveMessages: (messages) => {
+    try {
+      write(MESSAGES_KEY, messages);
+    } catch (err) {
+      console.error("Failed to save messages", err);
+    }
+  },
+  getSession: () => {
+    try {
+      return read(SESSION_KEY, null);
+    } catch (err) {
+      console.error("Failed to read session", err);
+      return null;
+    }
+  },
+  saveSession: (userId) => {
+    try {
+      write(SESSION_KEY, userId);
+    } catch (err) {
+      console.error("Failed to save session", err);
+    }
+  },
+  clearSession: () => {
+    try {
+      localStorage.removeItem(SESSION_KEY);
+    } catch (err) {
+      console.error("Failed to clear session", err);
+    }
+  }
 };
 
 export function seedMockData() {
