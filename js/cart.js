@@ -19,6 +19,14 @@ function readCart(userId) {
 function saveCart(userId, cart) {
   try {
     localStorage.setItem(cartKey(userId), JSON.stringify(cart));
+    try {
+      // notify UI that cart changed
+      if (typeof window !== 'undefined' && window.dispatchEvent) {
+        window.dispatchEvent(new CustomEvent('cart:updated', { detail: { userId } }));
+      }
+    } catch (e) {
+      // ignore dispatch errors
+    }
   } catch (err) {
     console.error("Failed to save cart", err);
   }

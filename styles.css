@@ -528,3 +528,66 @@ footer {
     padding: 1rem;
   }
 }
+
+/* Enhanced UI styles: badges, toasts, loader, responsive product images */
+
+#cart-badge,
+.badge {
+  display: inline-block;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  line-height: 20px;
+  border-radius: 999px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+#toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 1200;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #fff;
+  color: var(--text);
+  padding: 0.6rem 0.9rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 24px rgba(15,23,42,0.12);
+  border-left: 4px solid var(--primary);
+  transform: translateY(-6px);
+}
+
+.toast.success { border-left-color: var(--success); }
+.toast.error { border-left-color: var(--danger); }
+.toast.warning { border-left-color: var(--warning); }
+
+.toast-icon { font-size: 1.1rem; }
+.toast-body { font-size: 0.95rem; }
+
+.loader { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 1300; }
+.loader .spinner { width: 48px; height: 48px; border-radius: 50%; border: 5px solid rgba(0,0,0,0.08); border-top-color: var(--primary); animation: spin 0.9s linear infinite; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.product-image { width: 100%; height: 220px; object-fit: cover; border-radius: 0.8rem; background: var(--secondary); transition: transform 0.22s ease; }
+.product-media { overflow: hidden; border-radius: 0.8rem; }
+.product-card:hover .product-image { transform: scale(1.04); }
+
+/* small hover animations for buttons */
+.btn { transition: transform 0.12s ease, box-shadow 0.12s ease; }
+.btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(15,23,42,0.08); }
+
